@@ -10,11 +10,11 @@ public class Progress
 {
     public static string account = string.Empty;
     public static string password = string.Empty;
-
+    public static string name = string.Empty;
     public static List<string> sendDataToClient = new List<string>();
     public static string[] stringProcessing(string st)
     {
-        string[] strArray = st.Split(' ');
+        string[] strArray = st.Split('|');
         return strArray;
     }
     public static void processData(string[] st)
@@ -29,27 +29,30 @@ public class Progress
                 SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password))
                 {
-                    sendDataToClient.Add("Login sucessful");
+                    sendDataToClient.Add(0.ToString());
                 }
                 else
-                    sendDataToClient.Add("Wrong information");
+                    sendDataToClient.Add(1.ToString());
                 SqlConnection.sqlClose(SqlConnection.mySqlConnection);
-                break;  
+                sendDataToClient.Add(type.ToString());
+                break;
             case 1:
                 account = st[0];
                 password = st[1];
+                name = st[2];
                 sendDataToClient = new List<string>();
                 SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
                 if (SqlProgession.IsUserRegistered(SqlConnection.mySqlConnection, account))
                 {
-                    sendDataToClient.Add("Registered");
+                    sendDataToClient.Add(1.ToString());
                 }
                 else
                 {
-                    SqlProgession.addAccountToServer(SqlConnection.mySqlConnection,account,password);
-                    sendDataToClient.Add("Register done");
+                    SqlProgession.addAccountToServer(SqlConnection.mySqlConnection, account, password, name);
+                    sendDataToClient.Add(0.ToString());
                 }
                 SqlConnection.sqlClose(SqlConnection.mySqlConnection);
+                sendDataToClient.Add(type.ToString());
                 break;
         }
     }

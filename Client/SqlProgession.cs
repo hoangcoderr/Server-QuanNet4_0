@@ -48,7 +48,7 @@ public class SqlProgession
         }
         return false;
     }
-    public static void addAccountToServer(MySqlConnection connection, string username, string password)
+    public static void addAccountToServer(MySqlConnection connection, string username, string password, string name)
     {
         string query = "INSERT INTO userAccount (account, password)\r\nVALUES\r\n  (@username, @password);";
         try
@@ -57,6 +57,20 @@ public class SqlProgession
             {
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
+                command.ExecuteNonQuery();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        query = "INSERT INTO userInformation (account, name, amount) VALUES (@username, @name, 0)";
+        try
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                command.Parameters.AddWithValue("@username", username);
+                command.Parameters.AddWithValue("@name", name);
                 command.ExecuteNonQuery();
             }
         }
