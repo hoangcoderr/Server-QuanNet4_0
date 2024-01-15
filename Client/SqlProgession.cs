@@ -29,6 +29,34 @@ public class SqlProgession
         return false;
 
     }
+    public static void LoadDataUser(MySqlConnection connection, string username){
+        string query = "SELECT id, account,name,amount FROM userInformation WHERE account = @Username";
+
+        using (MySqlCommand command = new MySqlCommand(query, connection))
+        {
+            command.Parameters.AddWithValue("@Username", username);
+            try
+            {
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    // Kiểm tra xem có dữ liệu không
+                    if (reader.Read())
+                    {
+                        int id = reader.GetInt32(0);
+                        string name = reader.GetString(1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Không tìm thấy dữ liệu với điều kiện cho trước.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+    }
     public static bool IsUserRegistered(MySqlConnection connection, string username)
     {
         string query = "SELECT COUNT(*) FROM userAccount WHERE account = @Username";

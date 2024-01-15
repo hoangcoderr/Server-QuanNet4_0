@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "N5AfBgCZ2hbwxY6vKUQauWAuj+T2pRg9K+qozvQkfUn8OBnHNhOowDkg7wEP149OxWtF6Bd4idFtMLKaLXEoRw==",
+  "dgSpecHash": "AXvIcqBdHGE3vaetf0Le4EtqBhsgfz2rpe2HLOA4uHJJYA7/1mg/eD5piCq9q93R9ggKuzzXZuHyG9Lkf1KEAw==",
   "success": true,
-  "projectFilePath": "E:\\Coding\\C#\\client\\Client.csproj",
+  "projectFilePath": "E:\\Coding\\C#\\Client\\Client.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lebui\\.nuget\\packages\\bouncycastle.cryptography\\2.2.1\\bouncycastle.cryptography.2.2.1.nupkg.sha512",
     "C:\\Users\\lebui\\.nuget\\packages\\google.protobuf\\3.21.9\\google.protobuf.3.21.9.nupkg.sha512",
@@ -35,6 +35,7 @@
     "C:\\Users\\lebui\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
     "C:\\Users\\lebui\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\lebui\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
+    "C:\\Users\\lebui\\.nuget\\packages\\websocketsharp-netstandard\\1.0.1\\websocketsharp-netstandard.1.0.1.nupkg.sha512",
     "C:\\Users\\lebui\\.nuget\\packages\\zstdsharp.port\\0.7.1\\zstdsharp.port.0.7.1.nupkg.sha512"
   ],
   "logs": []

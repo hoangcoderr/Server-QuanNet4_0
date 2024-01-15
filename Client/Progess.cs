@@ -17,6 +17,7 @@ public class Progress
         string[] strArray = st.Split('|');
         return strArray;
     }
+    public static string dataSend = string.Empty;
     public static void processData(string[] st)
     {
         int type = int.Parse(st[st.Length - 1]);
@@ -30,6 +31,7 @@ public class Progress
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password))
                 {
                     sendDataToClient.Add(0.ToString());
+                    SqlProgession.LoadDataUser(SqlConnection.mySqlConnection,account);
                 }
                 else
                     sendDataToClient.Add(1.ToString());
@@ -66,5 +68,13 @@ public class Progress
         }
         byte[] responseData = Encoding.UTF8.GetBytes(responseStr);
         stream.Write(responseData, 0, responseData.Length);
+    }
+    public static string sendBackToClient(List<string> sendData){
+        string responseStr = string.Empty;
+        for (int i = 0; i < sendData.Count; i++)
+        {
+            responseStr += sendData[i] + (i == sendData.Count - 1 ? string.Empty : "|");
+        }
+        return responseStr;
     }
 }
