@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class SqlProgession
 {
-    public static bool IsUserAvaiable(MySqlConnection connection, string username, string password)
+    public static bool IsUserAvaiable(MySqlConnection connection, string username, string password, string id)
     {
         string query = "SELECT COUNT(*) FROM userAccount WHERE account = @Username AND password = @Password";
 
@@ -19,7 +19,12 @@ public class SqlProgession
             {
                 long count = Convert.ToInt64(command.ExecuteScalar());
 
-                return count > 0;
+                if (count > 0)
+                {
+                    setClientForUser(connection,username,id);
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {
@@ -27,9 +32,19 @@ public class SqlProgession
             }
         }
         return false;
-
     }
-    public static void LoadDataUser(MySqlConnection connection, string username){
+    public static void setClientForUser(MySqlConnection connection,string username,string id)
+    {
+        string query = "UPDATE userInformation SET client = @id WHERE account = @username;";
+        using (MySqlCommand commands = new MySqlCommand(query, connection))
+        {
+            commands.Parameters.AddWithValue("@id", id);
+            commands.Parameters.AddWithValue("@username", username);
+            commands.ExecuteNonQuery();
+        }
+    }
+    public static void LoadDataUser(MySqlConnection connection, string username)
+    {
         string query = "SELECT id, account,name,amount FROM userInformation WHERE account = @Username";
 
         using (MySqlCommand command = new MySqlCommand(query, connection))

@@ -33,9 +33,7 @@ class Echo : WebSocketBehavior
     {
         Console.WriteLine("Server received: " + e.Data); 
         string[] receiveData = Progress.stringProcessing(e.Data);
-        Progress.processData(receiveData);
+        Progress.processData(receiveData,ID);
         Send(Progress.sendBackToClient(Progress.sendDataToClient));
-
-
     }
 }

@@ -18,7 +18,7 @@ public class Progress
         return strArray;
     }
     public static string dataSend = string.Empty;
-    public static void processData(string[] st)
+    public static void processData(string[] st, string id)
     {
         int type = int.Parse(st[st.Length - 1]);
         switch (type)
@@ -28,15 +28,16 @@ public class Progress
                 password = st[1];
                 sendDataToClient = new List<string>();
                 SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
-                if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password))
+                if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password, id))
                 {
                     sendDataToClient.Add(0.ToString());
-                    SqlProgession.LoadDataUser(SqlConnection.mySqlConnection,account);
+                    SqlProgession.LoadDataUser(SqlConnection.mySqlConnection, account);
                 }
                 else
                     sendDataToClient.Add(1.ToString());
-                SqlConnection.sqlClose(SqlConnection.mySqlConnection);
+                SqlConnection.sqlClose(SqlConnection.mySqlConnection); 
                 sendDataToClient.Add(type.ToString());
+
                 break;
             case 1:
                 account = st[0];
@@ -69,7 +70,8 @@ public class Progress
         byte[] responseData = Encoding.UTF8.GetBytes(responseStr);
         stream.Write(responseData, 0, responseData.Length);
     }
-    public static string sendBackToClient(List<string> sendData){
+    public static string sendBackToClient(List<string> sendData)
+    {
         string responseStr = string.Empty;
         for (int i = 0; i < sendData.Count; i++)
         {
