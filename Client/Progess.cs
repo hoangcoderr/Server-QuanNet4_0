@@ -37,7 +37,6 @@ public class Progress
                     sendDataToClient.Add(1.ToString());
                 SqlConnection.sqlClose(SqlConnection.mySqlConnection); 
                 sendDataToClient.Add(type.ToString());
-
                 break;
             case 1:
                 account = st[0];
