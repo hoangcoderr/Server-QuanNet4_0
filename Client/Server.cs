@@ -4,21 +4,35 @@ using System.Net;
 using System.Text;
 using WebSocketSharp;
 using WebSocketSharp.Server;
+using System.Reflection;
+
 public class Server
 {
     public static int PORT = 8080;
     public static List<IWebSocketSession> ConnectedClients = new List<IWebSocketSession>();
+
     static void Main(string[] args)
     {
         var wssv = new WebSocketServer($"ws://localhost:{PORT}");
+        wssv.Log.Output = (data, path) => { };
         wssv.AddWebSocketService<Communication>("/Communication");
         wssv.Start();
         Console.ReadKey(true);
         wssv.Stop();
     }
+    public static void DisconnectClient(string id)
+    {
+        var client = ConnectedClients.FirstOrDefault(c => c.ID == id);
+        if (client != null)
+        {
+            client.Context.WebSocket.Close();
+            ConnectedClients.Remove(client);
+            Console.WriteLine("Client disconnected by kicked: " + id);
+        }
+    }
 }
 
-class Communication : WebSocketBehavior
+public class Communication : WebSocketBehavior
 {
     protected override void OnOpen()
     {
@@ -32,9 +46,15 @@ class Communication : WebSocketBehavior
     }
     protected override void OnMessage(MessageEventArgs e)
     {
+
         Console.WriteLine("Server received: " + e.Data);
         string[] receiveData = Progress.stringProcessing(e.Data);
         Progress.processData(receiveData, ID);
         Send(Progress.sendBackToClient(Progress.sendDataToClient));
+
     }
+
+
+
+
 }

@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using WebSocketSharp;
 
 public class Progress
 {
@@ -17,7 +18,7 @@ public class Progress
         string[] strArray = st.Split('|');
         return strArray;
     }
-    public static string dataSend = string.Empty;
+    public static string clientIdToKick = string.Empty;
     public static void processData(string[] st, string id)
     {
         int type = int.Parse(st[st.Length - 1]);
@@ -27,15 +28,24 @@ public class Progress
                 account = st[0];
                 password = st[1];
                 sendDataToClient = new List<string>();
+                string clientUsing = string.Empty;
                 SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password, id))
                 {
                     sendDataToClient.Add(0.ToString());
                     SqlProgession.LoadDataUser(SqlConnection.mySqlConnection, account);
+                    clientUsing = SqlProgession.getClientUsing(SqlConnection.mySqlConnection, account);
+                    if (clientUsing != string.Empty)
+                    {
+                        Console.WriteLine("Kicked " + clientUsing);
+                        Server.DisconnectClient(clientUsing);
+                    }
+
+                    SqlProgession.setClientForUser(SqlConnection.mySqlConnection, account, id);
                 }
                 else
                     sendDataToClient.Add(1.ToString());
-                SqlConnection.sqlClose(SqlConnection.mySqlConnection); 
+                SqlConnection.sqlClose(SqlConnection.mySqlConnection);
                 sendDataToClient.Add(type.ToString());
                 break;
             case 1:
@@ -78,4 +88,5 @@ public class Progress
         }
         return responseStr;
     }
+
 }

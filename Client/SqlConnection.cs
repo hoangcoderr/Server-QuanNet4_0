@@ -28,7 +28,7 @@ using MySql.Data.MySqlClient;
             try
             {
                 mySqlConnection.Close();
-                Console.WriteLine("Disonnected");
+                Console.WriteLine("Disonnected to database");
             }
             catch (Exception ex)
             {

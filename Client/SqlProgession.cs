@@ -21,7 +21,7 @@ public class SqlProgession
 
                 if (count > 0)
                 {
-                    setClientForUser(connection,username,id);
+                    
                     return true;
                 }
                 return false;
@@ -33,7 +33,21 @@ public class SqlProgession
         }
         return false;
     }
-    public static void setClientForUser(MySqlConnection connection,string username,string id)
+    public static string getClientUsing(MySqlConnection connection, string username)
+    {   object clientResuft;
+        string query = "SELECT client FROM userInformation WHERE account = @Username";
+        using (MySqlCommand commands = new MySqlCommand(query, connection))
+        {
+            commands.Parameters.AddWithValue("@Username", username);
+            clientResuft = commands.ExecuteScalar();
+        }
+        if (clientResuft != DBNull.Value)
+        {
+            return clientResuft.ToString();
+        }
+        return string.Empty;
+    }
+    public static void setClientForUser(MySqlConnection connection, string username, string id)
     {
         string query = "UPDATE userInformation SET client = @id WHERE account = @username;";
         using (MySqlCommand commands = new MySqlCommand(query, connection))
@@ -59,6 +73,7 @@ public class SqlProgession
                     {
                         int id = reader.GetInt32(0);
                         string name = reader.GetString(1);
+                        Console.WriteLine("ID: " + id + "||Name: " + name);
                     }
                     else
                     {
