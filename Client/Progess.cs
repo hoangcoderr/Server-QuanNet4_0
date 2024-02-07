@@ -33,7 +33,7 @@ public class Progress
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password, id))
                 {
                     sendDataToClient.Add(0.ToString());
-                    SqlProgession.LoadDataUser(SqlConnection.mySqlConnection, account);
+                    
                     clientUsing = SqlProgession.getClientUsing(SqlConnection.mySqlConnection, account);
                     if (clientUsing != string.Empty)
                     {
@@ -42,6 +42,7 @@ public class Progress
                     }
 
                     SqlProgession.setClientForUser(SqlConnection.mySqlConnection, account, id);
+                    SqlProgession.LoadDataUser(SqlConnection.mySqlConnection, account,id);
                 }
                 else
                     sendDataToClient.Add(1.ToString());

@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Bcpg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ public class SqlProgession
 
                 if (count > 0)
                 {
-                    
+
                     return true;
                 }
                 return false;
@@ -34,7 +35,8 @@ public class SqlProgession
         return false;
     }
     public static string getClientUsing(MySqlConnection connection, string username)
-    {   object clientResuft;
+    {
+        object clientResuft;
         string query = "SELECT client FROM userInformation WHERE account = @Username";
         using (MySqlCommand commands = new MySqlCommand(query, connection))
         {
@@ -57,9 +59,9 @@ public class SqlProgession
             commands.ExecuteNonQuery();
         }
     }
-    public static void LoadDataUser(MySqlConnection connection, string username)
+    public static void LoadDataUser(MySqlConnection connection, string username, string id)
     {
-        string query = "SELECT id, account,name,amount FROM userInformation WHERE account = @Username";
+        string query = "SELECT id, account,name,amount,client FROM userInformation WHERE account = @Username";
 
         using (MySqlCommand command = new MySqlCommand(query, connection))
         {
@@ -68,16 +70,26 @@ public class SqlProgession
             {
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    // Kiểm tra xem có dữ liệu không
                     if (reader.Read())
                     {
-                        int id = reader.GetInt32(0);
-                        string name = reader.GetString(1);
-                        Console.WriteLine("ID: " + id + "||Name: " + name);
+                        var user = Communication.connectedUsers.FirstOrDefault(u => u.Value.clientId == id).Value;
+                        if (user != null)
+                        {
+                            user.id = reader.GetInt32(0);
+                            user.user = reader.GetString(1);
+                            user.name = reader.GetString(2);
+                            user.amount = reader.GetInt32(3);   
+                            Progress.sendDataToClient.Add(user.id.ToString());
+                            Progress.sendDataToClient.Add(user.user);
+                            Progress.sendDataToClient.Add(user.name);
+                            Progress.sendDataToClient.Add(user.amount.ToString());
+                            Console.WriteLine("ID: " + user.id + "||Username: " + user.user + "||Name: " + user.name + "||Amount: " + user.amount + "||Client: " + user.clientId);
+                        }
+
                     }
                     else
                     {
-                        Console.WriteLine("Không tìm thấy dữ liệu với điều kiện cho trước.");
+                        Console.WriteLine("Cannot find the data with username: " + username);
                     }
                 }
             }

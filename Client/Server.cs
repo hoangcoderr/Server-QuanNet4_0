@@ -17,6 +17,7 @@ public class Server
         wssv.Log.Output = (data, path) => { };
         wssv.AddWebSocketService<Communication>("/Communication");
         wssv.Start();
+        Console.WriteLine("Server opened at localhost/Communication");
         Console.ReadKey(true);
         wssv.Stop();
     }
@@ -34,15 +35,23 @@ public class Server
 
 public class Communication : WebSocketBehavior
 {
+    public static Dictionary<WebSocketSessionManager, User> connectedUsers = new Dictionary<WebSocketSessionManager, User>();
     protected override void OnOpen()
     {
         Console.WriteLine("Client connected: " + ID);
         Server.ConnectedClients.Add(this);
+        User user = new User();
+        user.clientId = ID;
+        connectedUsers.Add(Sessions, user);
     }
     protected override void OnClose(CloseEventArgs e)
     {
         Console.WriteLine("Client disconnected: " + ID);
         Server.ConnectedClients.Remove(this);
+        if (connectedUsers.ContainsKey(Sessions))
+        {
+            connectedUsers.Remove(Sessions);
+        }
     }
     protected override void OnMessage(MessageEventArgs e)
     {
@@ -53,8 +62,6 @@ public class Communication : WebSocketBehavior
         Send(Progress.sendBackToClient(Progress.sendDataToClient));
 
     }
-
-
 
 
 }

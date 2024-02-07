@@ -9,11 +9,11 @@ using System.Text.RegularExpressions;
 public class User
 {
     public string user = string.Empty;
-    public int account = 0;
     
     public string name = string.Empty;
     public int id = 0;
-
+    public int amount = 0;
+    public string clientId = string.Empty;
     public User()
     {
     }
