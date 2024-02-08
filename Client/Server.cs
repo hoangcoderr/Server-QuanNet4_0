@@ -5,6 +5,7 @@ using System.Text;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 using System.Reflection;
+using System.Threading;
 
 public class Server
 {
@@ -60,8 +61,5 @@ public class Communication : WebSocketBehavior
         string[] receiveData = Progress.stringProcessing(e.Data);
         Progress.processData(receiveData, ID);
         Send(Progress.sendBackToClient(Progress.sendDataToClient));
-
     }
-
-
 }

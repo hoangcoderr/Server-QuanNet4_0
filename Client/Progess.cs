@@ -33,7 +33,7 @@ public class Progress
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password, id))
                 {
                     sendDataToClient.Add(0.ToString());
-                    
+
                     clientUsing = SqlProgession.getClientUsing(SqlConnection.mySqlConnection, account);
                     if (clientUsing != string.Empty)
                     {
@@ -42,7 +42,7 @@ public class Progress
                     }
 
                     SqlProgession.setClientForUser(SqlConnection.mySqlConnection, account, id);
-                    SqlProgession.LoadDataUser(SqlConnection.mySqlConnection, account,id);
+                    //SqlProgession.
                 }
                 else
                     sendDataToClient.Add(1.ToString());
@@ -67,18 +67,29 @@ public class Progress
                 SqlConnection.sqlClose(SqlConnection.mySqlConnection);
                 sendDataToClient.Add(type.ToString());
                 break;
+            case 2:
+                account = st[0];
+                var user = Communication.connectedUsers.FirstOrDefault(u => u.Value.user == account).Value;
+                int typeBuy = int.Parse(st[1]);
+                switch (typeBuy)
+                {
+                    case 5:
+                        if (user.amount >= 10)
+                        {
+                            user.amount -= 10;
+                            Console.WriteLine(user.amount.ToString());
+                            sendDataToClient.Add(1.ToString());
+                            sendDataToClient.Add("10");
+
+                        }
+                        break;
+                }
+            
+                sendDataToClient.Add(type.ToString());
+                break;
+
+
         }
-    }
-    public static void SendData(TcpClient client, List<string> sendData)
-    {
-        NetworkStream stream = client.GetStream();
-        string responseStr = string.Empty;
-        for (int i = 0; i < sendData.Count; i++)
-        {
-            responseStr += sendData[i] + (i == sendData.Count - 1 ? string.Empty : "|");
-        }
-        byte[] responseData = Encoding.UTF8.GetBytes(responseStr);
-        stream.Write(responseData, 0, responseData.Length);
     }
     public static string sendBackToClient(List<string> sendData)
     {
@@ -87,6 +98,7 @@ public class Progress
         {
             responseStr += sendData[i] + (i == sendData.Count - 1 ? string.Empty : "|");
         }
+        sendDataToClient.Clear();
         return responseStr;
     }
 

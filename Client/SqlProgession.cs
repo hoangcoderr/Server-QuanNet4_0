@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 public class SqlProgession
 {
@@ -58,6 +57,7 @@ public class SqlProgession
             commands.Parameters.AddWithValue("@username", username);
             commands.ExecuteNonQuery();
         }
+            LoadDataUser(SqlConnection.mySqlConnection, username,id);
     }
     public static void LoadDataUser(MySqlConnection connection, string username, string id)
     {
@@ -92,6 +92,7 @@ public class SqlProgession
                         Console.WriteLine("Cannot find the data with username: " + username);
                     }
                 }
+            
             }
             catch (Exception ex)
             {
