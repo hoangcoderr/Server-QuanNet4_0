@@ -17,6 +17,7 @@ Sử dụng WebSocket và ngôn ngữ C#.
 - Sử dụng websocket trao đổi với client, tăng tốc độ trao đổi thông tin, bảo mật thông tin một cách tốt nhất
 - Khi client gửi thông tin đến server, server sẽ xử lý theo những data mà client gửi lên, rồi trả ngược lại client.
 - Kick các client khi đăng nhập trùng một tài khoản.
+- Cient ở đây nhé: https://github.com/hoangcoderr/QuanNet4_0
 - To be continue(Sẽ cập nhật nếu có chức năng gì mới heheehhe)
 
 ## _Chú ý: Project này được làm bởi sv năm nhất, nên chắc chắc sai sót là rất nhiều, nhưng tớ sẽ cố gắng cải thiện, nâng cấp project này!!_
