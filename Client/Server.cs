@@ -14,6 +14,8 @@ public class Server
 
     static void Main(string[] args)
     {
+        SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
+        SqlProgession.loadItemFromServer(SqlConnection.mySqlConnection,Item.items);
         var wssv = new WebSocketServer($"ws://localhost:{PORT}");
         wssv.Log.Output = (data, path) => { };
         wssv.AddWebSocketService<Communication>("/Communication");

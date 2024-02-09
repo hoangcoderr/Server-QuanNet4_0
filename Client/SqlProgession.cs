@@ -57,7 +57,7 @@ public class SqlProgession
             commands.Parameters.AddWithValue("@username", username);
             commands.ExecuteNonQuery();
         }
-            LoadDataUser(SqlConnection.mySqlConnection, username,id);
+        LoadDataUser(SqlConnection.mySqlConnection, username, id);
     }
     public static void LoadDataUser(MySqlConnection connection, string username, string id)
     {
@@ -78,7 +78,7 @@ public class SqlProgession
                             user.id = reader.GetInt32(0);
                             user.user = reader.GetString(1);
                             user.name = reader.GetString(2);
-                            user.amount = reader.GetInt32(3);   
+                            user.amount = reader.GetInt32(3);
                             Progress.sendDataToClient.Add(user.id.ToString());
                             Progress.sendDataToClient.Add(user.user);
                             Progress.sendDataToClient.Add(user.name);
@@ -92,7 +92,7 @@ public class SqlProgession
                         Console.WriteLine("Cannot find the data with username: " + username);
                     }
                 }
-            
+
             }
             catch (Exception ex)
             {
@@ -147,6 +147,36 @@ public class SqlProgession
         }
         catch (Exception ex)
         {
+            Console.WriteLine(ex.Message);
+        }
+    }
+    public static void loadItemFromServer(MySqlConnection connection, List<Item> items)
+    {
+        Console.WriteLine("Loading Item!!!");
+
+        string query = "SELECT * FROM item";
+        try
+        {
+            using (MySqlCommand command = new MySqlCommand(query, connection))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Item newItem = new Item();
+                        newItem.Id = reader.GetInt32(0);
+                        newItem.itemName = reader.GetString(1);
+                        newItem.amount = reader.GetInt32(2);
+                        newItem.description = reader.GetString(3);
+                        Console.WriteLine("Item ID: " + newItem.Id + "||Item Name: " + newItem.itemName + "||Item Amount: " + newItem.amount.ToString() + "||Decription: " + newItem.description);
+                        items.Add(newItem);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            SqlConnection.sqlClose(connection);
             Console.WriteLine(ex.Message);
         }
     }

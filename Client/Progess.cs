@@ -29,7 +29,7 @@ public class Progress
                 password = st[1];
                 sendDataToClient = new List<string>();
                 string clientUsing = string.Empty;
-                SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
+
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password, id))
                 {
                     sendDataToClient.Add(0.ToString());
@@ -46,7 +46,6 @@ public class Progress
                 }
                 else
                     sendDataToClient.Add(1.ToString());
-                SqlConnection.sqlClose(SqlConnection.mySqlConnection);
                 sendDataToClient.Add(type.ToString());
                 break;
             case 1:
@@ -54,7 +53,6 @@ public class Progress
                 password = st[1];
                 name = st[2];
                 sendDataToClient = new List<string>();
-                SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
                 if (SqlProgession.IsUserRegistered(SqlConnection.mySqlConnection, account))
                 {
                     sendDataToClient.Add(1.ToString());
@@ -64,31 +62,21 @@ public class Progress
                     SqlProgession.addAccountToServer(SqlConnection.mySqlConnection, account, password, name);
                     sendDataToClient.Add(0.ToString());
                 }
-                SqlConnection.sqlClose(SqlConnection.mySqlConnection);
                 sendDataToClient.Add(type.ToString());
                 break;
             case 2:
                 account = st[0];
                 var user = Communication.connectedUsers.FirstOrDefault(u => u.Value.user == account).Value;
-                int typeBuy = int.Parse(st[1]);
-                switch (typeBuy)
+                int idBuy = int.Parse(st[1]);
+                if (user.amount >= Item.items[idBuy - 1].amount)
                 {
-                    case 5:
-                        if (user.amount >= 10)
-                        {
-                            user.amount -= 10;
-                            Console.WriteLine(user.amount.ToString());
-                            sendDataToClient.Add(1.ToString());
-                            sendDataToClient.Add("10");
-
-                        }
-                        break;
+                    user.amount -= Item.items[idBuy - 1].amount;
+                    Console.WriteLine(user.amount.ToString());
+                    sendDataToClient.Add(1.ToString());
+                    sendDataToClient.Add(Item.items[idBuy - 1].amount.ToString());
                 }
-            
                 sendDataToClient.Add(type.ToString());
                 break;
-
-
         }
     }
     public static string sendBackToClient(List<string> sendData)
