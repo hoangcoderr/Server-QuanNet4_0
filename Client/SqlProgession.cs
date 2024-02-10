@@ -167,8 +167,9 @@ public class SqlProgession
                         newItem.Id = reader.GetInt32(0);
                         newItem.itemName = reader.GetString(1);
                         newItem.amount = reader.GetInt32(2);
-                        newItem.description = reader.GetString(3);
-                        Console.WriteLine("Item ID: " + newItem.Id + "||Item Name: " + newItem.itemName + "||Item Amount: " + newItem.amount.ToString() + "||Decription: " + newItem.description);
+                        newItem.quantity = reader.GetInt32(3);
+                        newItem.description = reader.GetString(4);
+                        Console.WriteLine("Item ID: " + newItem.Id + "||Item Name: " + newItem.itemName + "||Item Amount: " + newItem.amount.ToString() + "||Quantity: " + newItem.quantity.ToString() + "||Decription: " + newItem.description);
                         items.Add(newItem);
                     }
                 }
@@ -179,5 +180,27 @@ public class SqlProgession
             SqlConnection.sqlClose(connection);
             Console.WriteLine(ex.Message);
         }
+    }
+    public static void updateAmountToDatabase(MySqlConnection connection, string username, int money)
+    {
+        string query = "UPDATE userInformation SET amount = @money WHERE account = @username;";
+        using (MySqlCommand commands = new MySqlCommand(query, connection))
+        {
+            commands.Parameters.AddWithValue("@money", money);
+            commands.Parameters.AddWithValue("@username", username);
+            commands.ExecuteNonQuery();
+        }
+        Console.WriteLine("Updated " + username + "'s amount to " + money);
+        
+    }
+    public static void updateItemQuantityToDatabase(MySqlConnection connection, int idItem)
+    {
+        string query = "UPDATE item SET quantity = quantity - 1 WHERE id = @idItem;";
+        using (MySqlCommand commands = new MySqlCommand(query, connection))
+        {
+            commands.Parameters.AddWithValue("@idItem", idItem);
+            commands.ExecuteNonQuery();
+        }
+        Console.WriteLine("Updated item ID " + idItem + "'s quantity");
     }
 }

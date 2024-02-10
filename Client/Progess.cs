@@ -2,13 +2,19 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using WebSocketSharp;
+using System.Threading;
 
 public class Progress
 {
+    public static string YES = "0";
+    public static string NO = "1";
+
+    public static string SERVER_NOT_REQUIRED = "2";
     public static string account = string.Empty;
     public static string password = string.Empty;
     public static string name = string.Empty;
@@ -32,7 +38,7 @@ public class Progress
 
                 if (SqlProgession.IsUserAvaiable(SqlConnection.mySqlConnection, account, password, id))
                 {
-                    sendDataToClient.Add(0.ToString());
+                    sendDataToClient.Add(YES);
 
                     clientUsing = SqlProgession.getClientUsing(SqlConnection.mySqlConnection, account);
                     if (clientUsing != string.Empty)
@@ -45,7 +51,7 @@ public class Progress
                     //SqlProgession.
                 }
                 else
-                    sendDataToClient.Add(1.ToString());
+                    sendDataToClient.Add(NO);
                 sendDataToClient.Add(type.ToString());
                 break;
             case 1:
@@ -55,26 +61,46 @@ public class Progress
                 sendDataToClient = new List<string>();
                 if (SqlProgession.IsUserRegistered(SqlConnection.mySqlConnection, account))
                 {
-                    sendDataToClient.Add(1.ToString());
+                    sendDataToClient.Add(NO);
                 }
                 else
                 {
                     SqlProgession.addAccountToServer(SqlConnection.mySqlConnection, account, password, name);
-                    sendDataToClient.Add(0.ToString());
+                    sendDataToClient.Add(YES);
                 }
                 sendDataToClient.Add(type.ToString());
                 break;
             case 2:
                 account = st[0];
                 var user = Communication.connectedUsers.FirstOrDefault(u => u.Value.user == account).Value;
-                int idBuy = int.Parse(st[1]);
-                if (user.amount >= Item.items[idBuy - 1].amount)
+                int idBuy = int.Parse(st[1]) - 1;
+                if (Item.items[idBuy].quantity > 0)
                 {
-                    user.amount -= Item.items[idBuy - 1].amount;
-                    Console.WriteLine(user.amount.ToString());
-                    sendDataToClient.Add(1.ToString());
-                    sendDataToClient.Add(Item.items[idBuy - 1].amount.ToString());
+                    if (user.amount >= Item.items[idBuy].amount)
+                    {
+                        user.amount -= Item.items[idBuy].amount;
+                        Item.items[idBuy].quantity -= 1;
+                        ThreadStart threadStart = new ThreadStart(() =>
+                         {
+                             SqlProgession.updateAmountToDatabase(SqlConnection.mySqlConnection, account, user.amount);
+                             SqlProgession.updateItemQuantityToDatabase(SqlConnection.mySqlConnection, idBuy + 1);
+                         }); 
+                        Thread thread = new Thread(threadStart);
+                        thread.Start();
+                        Console.WriteLine(user.amount.ToString());
+                        sendDataToClient.Add(YES);
+                        sendDataToClient.Add(Item.items[idBuy].amount.ToString());
+                    }
+                    else
+                    {
+                        sendDataToClient.Add(NO);
+                    }
                 }
+                else
+                {
+                    sendDataToClient.Add(SERVER_NOT_REQUIRED);
+                }
+
                 sendDataToClient.Add(type.ToString());
                 break;
         }
