@@ -1,4 +1,26 @@
-﻿using System;
+﻿//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  -  /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//            Nam mô, chỉ có phật với mới tôi mới chạy được đống rác này
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+using System;
 using System.Linq.Expressions;
 using System.Net;
 using System.Text;
@@ -15,7 +37,7 @@ public class Server
     static void Main(string[] args)
     {
         SqlConnection.sqlConnect(SqlConnection.mySqlConnection);
-        SqlProgession.loadItemFromServer(SqlConnection.mySqlConnection,Item.items);
+        SqlProgession.loadItemFromServer(SqlConnection.mySqlConnection, Item.items);
         var wssv = new WebSocketServer($"ws://localhost:{PORT}");
         wssv.Log.Output = (data, path) => { };
         wssv.AddWebSocketService<Communication>("/Communication");
@@ -29,7 +51,9 @@ public class Server
         var client = ConnectedClients.FirstOrDefault(c => c.ID == id);
         if (client != null)
         {
+            client.Context.WebSocket.Send("2|2");
             client.Context.WebSocket.Close();
+
             ConnectedClients.Remove(client);
             Console.WriteLine("Client disconnected by kicked: " + id);
         }

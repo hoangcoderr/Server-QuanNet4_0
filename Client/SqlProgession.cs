@@ -1,4 +1,27 @@
-﻿using MySql.Data.MySqlClient;
+﻿//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  -  /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//            Nam mô, chỉ có phật với mới tôi mới chạy được đống rác này
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Bcpg;
 using System;
 using System.Collections.Generic;
@@ -85,6 +108,7 @@ public class SqlProgession
                             Progress.sendDataToClient.Add(user.amount.ToString());
                             Console.WriteLine("ID: " + user.id + "||Username: " + user.user + "||Name: " + user.name + "||Amount: " + user.amount + "||Client: " + user.clientId);
                         }
+                        else Console.WriteLine("NULL "+id);
 
                     }
                     else
